@@ -20,6 +20,7 @@ def _get_all_switch_keys(my_account):
 def generate_switch_key():
     my_account = input('Enter account name: ')
     accounts = _get_all_switch_keys(my_account)
+    print(accounts)
     for i, account in enumerate(accounts, start=1):
         print(f'{i}: {account["accountName"]}')
     key_number = int(input('Enter key number: '))
@@ -29,5 +30,4 @@ def generate_switch_key():
 
 
 if __name__ == '__main__':
-
     print(generate_switch_key())
