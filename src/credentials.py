@@ -20,7 +20,6 @@ def _get_all_switch_keys(my_account):
                        params=qparam).json()
     return resp
 
-
 def generate_switch_key():
     my_account = input('Enter account name: ')
     accounts = _get_all_switch_keys(my_account)
@@ -29,7 +28,6 @@ def generate_switch_key():
     key_number = int(input('Enter key number: '))
     switch_key = accounts[key_number - 1]['accountSwitchKey']
     return switch_key
-
 
 if __name__ == '__main__':
     print(generate_switch_key())
