@@ -1,23 +1,35 @@
-name: Create Git Branch and Make a Change
+name: Deploy Configuration
 
 on:
-  workflow_dispatch:  # Allows manual triggering of the workflow
+  push:
+    branches:
+      - main
+    paths:
+      - src/gamittal-compute.json  # Trigger only when this file is changed
+
 
 jobs:
-  create_branch:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    # Step 1: Check out the code
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Create new branch
-        run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git checkout -b update-origin
-          # Make changes to the config file or other files here
-          echo 'Making a change to config.json' >> config.json
-          git add config.json
-          git commit -m "Manually update config.json"
-          git push origin update-origin
+    # Step 2: Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'  # Specify your Python version
+
+    # Step 3: Install dependencies if needed
+    # If you have dependencies for `upload.py`, install them.
+    # Otherwise, you can skip this step.
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    # Step 4: Run upload.py
+    - name: Run the upload script
+      run: python src/upload.py
