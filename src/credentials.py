@@ -26,7 +26,5 @@ def generate_switch_key():
     switch_key =accounts[key_number -1]['accountSwitchKey']
     return switch_key
 
-
-
 if __name__ == '__main__':
     print(generate_switch_key())
