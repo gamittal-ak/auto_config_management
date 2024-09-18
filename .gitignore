@@ -1,5 +1,6 @@
 /.venv/
 # Exclude personal settings
+.idea
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
