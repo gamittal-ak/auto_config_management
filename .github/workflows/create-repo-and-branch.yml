@@ -1,0 +1,23 @@
+name: Create Git Branch and Make a Change
+
+on:
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  create_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create new branch
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git checkout -b update-origin
+          # Make changes to the config file or other files here
+          echo 'Making a change to config.json' >> config.json
+          git add config.json
+          git commit -m "Manually update config.json"
+          git push origin update-origin
