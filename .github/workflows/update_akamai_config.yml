@@ -23,10 +23,10 @@ jobs:
         run: |
           pip3 install -r requirements.txt  # Using system-installed Python 3.12.0
 
-      # Create a new Property Version
-      - name: Create a new Property Version
-        run: |
-          python3 src/create_a_new_property_version.py  # Using system-installed Python
+#      # Create a new Property Version
+#      - name: Create a new Property Version
+#        run: |
+#          python3 src/create_a_new_property_version.py  # Using system-installed Python
 
       - name: Update Property Rule Tree
         run: |
