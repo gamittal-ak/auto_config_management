@@ -4,7 +4,7 @@ from credentials import *
 
 def update_rule_tree(ASK, propertyId, propertyVersion, contractId, groupId):
 
-    with open('gamittal-compute.json', 'r') as file:
+    with open('src/gamittal-compute.json', 'r') as file:
         payload = json.load(file)
 
     qs = {'accountSwitchKey': ASK,
