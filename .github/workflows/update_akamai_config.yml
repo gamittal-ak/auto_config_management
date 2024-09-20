@@ -28,6 +28,9 @@ jobs:
 #        run: |
 #          python3 src/create_a_new_property_version.py  # Using system-installed Python
 
+      - name: List files in the current directory
+        run: ls -R
+
       - name: Update Property Rule Tree
         run: |
           python3 src/update_property_rule_tree.py  # Using system-installed Python
