@@ -10,7 +10,7 @@
         "name": "default",
         "children": [
             {
-                "name": "Augment insights",
+                "name": "Augment insight",
                 "children": [
                     {
                         "name": "Traffic reporting",
