@@ -59,3 +59,10 @@ if __name__ == '__main__':
     pprint(rule_tree)
     with open(f'{rule_tree['propertyName']}.json', 'w') as outfile:
         json.dump(rule_tree, outfile, indent=4)
+
+    print(rule_tree['accountId'])
+    print(rule_tree['contractId'])
+    print(rule_tree['groupId'])
+    print(rule_tree['propertyId'])
+    print(rule_tree['propertyName'])
+    print(rule_tree['propertyVersion'])
