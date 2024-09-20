@@ -22,15 +22,15 @@ jobs:
       # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip3 install -r requirements.txt
 
       # Create a new Property Version
       - name: Create a new Property Version
         run: |
-          python src/create_a_new_property_version.py
+          python3 src/create_a_new_property_version.py
       - name: update_rule_tree
         run: |
-          python src/update_property_rule_tree.py 
+          python3 src/update_property_rule_tree.py 
   
 
   deploy-to-stage:
@@ -43,12 +43,12 @@ jobs:
       # Step : Deploy to Akamai Staging
       - name: Deploy to Akamai Staging
         run: |
-          python src/activate_on_stage.py  
+          python3 src/activate_on_stage.py  
 
       # Step 5: Run test script
       - name: Run test script
         run: |
-          python src/test_stage.py  # Replace with your test script
+          python3 src/test_stage.py  # Replace with your test script
       # Ensure that this script checks for a 200 OK response
       # If the script returns a non-zero exit code, it will stop the job
 
@@ -82,4 +82,4 @@ jobs:
       # Step 2: Deploy to Akamai Production
       - name: Deploy to Akamai Production
         run: |
-          python src/deploy_prod.py  # Replace with your production deployment script
+          python3 src/deploy_prod.py  # Replace with your production deployment script
