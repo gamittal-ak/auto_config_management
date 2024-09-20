@@ -46,7 +46,7 @@ if __name__ == '__main__':
     contractId='1-5C13O2'
     groupId = '232339'
     propertyId = '988273'
-    propertyVersion = '4'
+    propertyVersion = '5'
     etag = 'b3d8183cd56cff2ac7558851ae909050315e80ef'
     response = activate_on_stage(ASK,propertyId, propertyVersion, contractId, groupId)
     print(response.status_code)

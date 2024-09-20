@@ -10,15 +10,6 @@ jobs:
   update-rule-tree:
     runs-on: [self-hosted, demo_workflow]
     steps: # Uploads the updated property rule tree
-      - name: update_rule_tree
-        run: |
-          python src/update_property_rule_tree.py 
-  
-
-  deploy-to-stage:
-    runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
-    steps:
-      # Step 1: Check out the code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -33,7 +24,23 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # Step 4: Deploy to Akamai Staging
+      # Create a new Property Version
+      - name: Create a new Property Version
+        run: |
+          python src/create_a_new_property_version.py
+      - name: update_rule_tree
+        run: |
+          python src/update_property_rule_tree.py 
+  
+
+  deploy-to-stage:
+    runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step : Deploy to Akamai Staging
       - name: Deploy to Akamai Staging
         run: |
           python src/activate_on_stage.py  
