@@ -13,6 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create .edgerc file
+        run: |
+          mkdir -p ~/.edgerc_location 
+          echo "${{ secrets.AKAMAI_EDGERC }}" > ~/.edgerc
+          shell: bash
+
+
       # Step 2: Install dependencies
       - name: Install dependencies
         run: |

@@ -1086,7 +1086,7 @@
                     "trueClientIpClientSetting": false,
                     "trueClientIpHeader": "True-Client-IP",
                     "verificationMode": "PLATFORM_SETTINGS",
-                    "hostname": "try2.linodeobjects.com",
+                    "hostname": "try3.linodeobjects.com",
                     "ipVersion": "IPV4",
                     "tlsVersionTitle": "",
                     "tls13Support": false,
