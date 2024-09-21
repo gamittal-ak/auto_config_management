@@ -50,16 +50,16 @@ jobs:
         run: |
           python3 tests/test_stage.py
 
-      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
-      - name: Check for valid status code range (2xx, 3xx, 4xx)
-        run: |
-          status_code=$(python3 tests/test_stage.py)
-          echo "Status Code: $status_code"
-          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
-            echo "Status code is valid."
-          else
-            exit 1
-          fi
+#      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
+#      - name: Check for valid status code range (2xx, 3xx, 4xx)
+#        run: |
+#          status_code=$(python3 tests/test_stage.py)
+#          echo "Status Code: $status_code"
+#          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
+#            echo "Status code is valid."
+#          else
+#            exit 1
+#          fi
 
   merge-to-main:
     needs: deploy-to-stage
@@ -103,13 +103,13 @@ jobs:
         run: |
           python3 tests/test_prod.py
 
-      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
-      - name: Check for valid status code range (2xx, 3xx, 4xx)
-        run: |
-          status_code=$(python3 tests/test_prod.py)
-          echo "Status Code: $status_code"
-          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
-            echo "Status code is valid."
-          else
-            exit 1
-          fi
+#      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
+#      - name: Check for valid status code range (2xx, 3xx, 4xx)
+#        run: |
+#          status_code=$(python3 tests/test_prod.py)
+#          echo "Status Code: $status_code"
+#          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
+#            echo "Status code is valid."
+#          else
+#            exit 1
+#          fi

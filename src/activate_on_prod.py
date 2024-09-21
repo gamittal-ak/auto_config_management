@@ -43,10 +43,11 @@ if __name__ == '__main__':
     # ASK = '1-599K:1-8BYUX'
     # TC East
     ASK = '1-5BYUG1:1-8BYUX'
-    contractId='1-5C13O2'
-    groupId = '232339'
-    propertyId = '988273'
-    propertyVersion = '5'
+    contractId = '1-5C13O2'
+    groupId = '18543'
+    propertyId = '1101399'
+    propertyVersion = '3'
     etag = '5766855d8879dab1fa85ebf276c53169f38abf4a'
+
     response = activate_on_stage(ASK,propertyId, propertyVersion, contractId, groupId)
     print(response.status_code)
