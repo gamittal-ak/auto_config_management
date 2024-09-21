@@ -4,7 +4,7 @@ on:
     branches:
       - feature/*  # Trigger when a feature branch is updated
     paths:
-      - src/gamittal-compute.json  # Trigger only when this file is changed
+      - src/www.cyberabstract.com.json  # Trigger only when this file is changed
 
 jobs:
   update-rule-tree:
@@ -23,13 +23,10 @@ jobs:
         run: |
           pip3 install -r requirements.txt  # Using system-installed Python 3.12.0
 
-#      # Create a new Property Version
-#      - name: Create a new Property Version
-#        run: |
-#          python3 src/create_a_new_property_version.py  # Using system-installed Python
-
-      - name: List files in the current directory
-        run: ls -R
+      # Create a new Property Version
+      - name: Create a new Property Version
+        run: |
+          python3 src/create_a_new_property_version.py  # Using system-installed Python
 
       - name: Update Property Rule Tree
         run: |
@@ -47,7 +44,72 @@ jobs:
         run: |
           python3 src/activate_on_stage.py  # Using system-installed Python
 
-      # Step: Run test script
-      - name: Run test script
+      # Step: Run test script and handle status code ranges
+      - name: Run staging test script
+        id: run_test
         run: |
-          python3 src/test_stage.py  # Using system-installed Python
+          python3 tests/test_stage.py
+
+      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
+      - name: Check for valid status code range (2xx, 3xx, 4xx)
+        run: |
+          status_code=$(python3 tests/test_stage.py)
+          echo "Status Code: $status_code"
+          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
+            echo "Status code is valid."
+          else
+            exit 1
+          fi
+
+  merge-to-main:
+    needs: deploy-to-stage
+    if: success()  # This ensures that this job runs only if the previous jobs are successful
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      # Merge the feature branch into the main branch
+      - name: Merge feature branch into main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git merge ${{ github.head_ref }}  # Merge feature branch into main
+          git push origin main  # Push the changes to the main branch
+
+      # Delete the feature branch after merging
+      - name: Delete feature branch
+        run: |
+          git push origin --delete ${{ github.head_ref }}  # Delete the feature branch on the remote
+
+  deploy-to-production:
+    needs: merge-to-main  # This job will run only if the merge is successful
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step: Deploy to Akamai Production
+      - name: Deploy to Akamai Production
+        run: |
+          python3 src/activate_on_prod.py  # Using system-installed Python to deploy to production
+
+      # Step: Run test script and handle status code ranges
+      - name: Run prod test script
+        id: run_test
+        run: |
+          python3 tests/test_prod.py
+
+      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
+      - name: Check for valid status code range (2xx, 3xx, 4xx)
+        run: |
+          status_code=$(python3 tests/test_prod.py)
+          echo "Status Code: $status_code"
+          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
+            echo "Status code is valid."
+          else
+            exit 1
+          fi

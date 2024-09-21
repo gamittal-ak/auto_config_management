@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     # property_name = input('Enter Property name to search: ')
     # property_name='cyberabstract_property'
-    property_name='gamittal-compute'
+    property_name='www.cyberabstract.com'
 
 
     res = property_search(property_name, ASK)

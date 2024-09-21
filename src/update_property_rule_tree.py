@@ -38,7 +38,7 @@ if __name__ == '__main__':
     groupId = '232339'
     propertyId = '988273'
     propertyVersion = '5'
-    etag = 'b3d8183cd56cff2ac7558851ae909050315e80ef'
+    etag = '5766855d8879dab1fa85ebf276c53169f38abf4a'
     response = update_rule_tree(ASK,propertyId, propertyVersion, contractId, groupId)
     print(response.status_code)
 

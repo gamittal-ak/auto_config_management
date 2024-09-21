@@ -32,9 +32,9 @@ if __name__ == '__main__':
     # TC East
     ASK = '1-5BYUG1:1-8BYUX'
     contractId = '1-5C13O2'
-    groupId = '232339'
-    propertyId = '988273'
-    propertyVersion = '2'
-    etag = 'b3d8183cd56cff2ac7558851ae909050315e80ef'
+    groupId = '18543'
+    propertyId = '1101399'
+    propertyVersion = '1'
+    etag = '5766855d8879dab1fa85ebf276c53169f38abf4a'
     response = create_new_version(ASK, propertyId, propertyVersion, contractId, groupId, etag)
     print(response.status_code)
