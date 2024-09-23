@@ -429,7 +429,7 @@
                             {
                                 "name": "contentType",
                                 "options": {
-                                    "matchCaseSensitive": false,
+                                    "matchCaseSensitive": true,
                                     "matchOperator": "IS_ONE_OF",
                                     "matchWildcard": true,
                                     "values": [
