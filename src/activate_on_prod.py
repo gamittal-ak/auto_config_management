@@ -28,7 +28,19 @@ def activate_on_stage(ASK, propertyId, propertyVersion, contractId, groupId):
         "notifyEmails": [
             "gamittal@akamai.com",
         ],
-        "acknowledgeAllWarnings": True
+        "acknowledgeAllWarnings": True,
+        # "nonComplianceReason":"NO_PRODUCTION_TRAFFIC",
+        "complianceRecord": {
+            "unitTested": "false",
+            "peerReviewedBy": "",
+            "customerEmail": "",
+            "nonComplianceReason": "NO_PRODUCTION_TRAFFIC",
+            "otherNoncomplianceReason": "",
+            "siebelCase": ""
+        }
+
+
+
 
         # "acknowledgeWarnings": [
         #     "7a2aa72bca3f894607c126436861cb73fb82d677"
