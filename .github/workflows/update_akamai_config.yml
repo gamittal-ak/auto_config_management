@@ -109,12 +109,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.12.0'  # Ensure Python 3 is installed
-
-
       # Step: Install dependencies (if needed)
       - name: Install dependencies
         run: |
@@ -131,7 +125,7 @@ jobs:
       # Step 2: Deploy to Akamai Production
       - name: Deploy to Akamai Production
         run: |
-          python src/deploy_prod.py  # Replace with your production deployment script
+          python3 src/deploy_prod.py  # Replace with your production deployment script
 
       # Step: Run pytest to test on staging environment
       - name: Run pytest on prod environment
