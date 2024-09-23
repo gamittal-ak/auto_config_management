@@ -22,7 +22,7 @@ def get_latest_version(ASK, propertyId, contractId, groupId):
 def activate_on_stage(ASK, propertyId, propertyVersion, contractId, groupId):
     payload = {
         "propertyVersion": propertyVersion,
-        "network": "STAGING",
+        "network": "PRODUCTION",
         "note": "Sample activation",
         "useFastFallback": 'false',
         "notifyEmails": [
