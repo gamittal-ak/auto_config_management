@@ -60,6 +60,13 @@ jobs:
         run: |
           pip3 install -r requirements.txt 
 
+      - name: Print the working directory and list contents
+        run: |
+          echo "Current working directory:"
+          pwd  # Print the current working directory
+          echo "Directory contents:"
+          ls -al  # List the contents of the current directory
+
       # Step: Run pytest to test on staging environment
       - name: Run pytest on staging environment
         run: |
