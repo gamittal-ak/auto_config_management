@@ -16,8 +16,8 @@ def get_latest_version(ASK, propertyId, contractId, groupId):
 
     response = session.get(urljoin(baseurl, f'/papi/v1/properties/{propertyId}/versions/latest'),
                             headers=headers, params=qs)
-    print(response.json())
-    return response
+    # print(response.json())
+    return response.json()
 
 def activate_on_stage(ASK, propertyId, propertyVersion, contractId, groupId):
     payload = {
@@ -64,7 +64,8 @@ if __name__ == '__main__':
     contractId = '1-5C13O2'
     groupId = '18543'
     propertyId = '1101399'
-    propertyVersion = get_latest_version(ASK, propertyId, contractId, groupId)['versions']['items'][0]['propertyVersion']
+    propertyVersion_response = get_latest_version(ASK, propertyId, contractId, groupId)
+    propertyVersion = propertyVersion_response['versions']['items'][0]['propertyVersion']
 
     etag = '5766855d8879dab1fa85ebf276c53169f38abf4a'
 
