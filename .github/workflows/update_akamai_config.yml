@@ -21,16 +21,16 @@ jobs:
       # Step 2: Install dependencies
       - name: Install dependencies
         run: |
-          pip3 install -r requirements.txt  # Using system-installed Python 3.12.0
+          pip3 install -r requirements.txt  
 
       # Create a new Property Version
       - name: Create a new Property Version
         run: |
-          python3 src/create_a_new_property_version.py  # Using system-installed Python
+          python3 src/create_a_new_property_version.py 
 
       - name: Update Property Rule Tree
         run: |
-          python3 src/update_property_rule_tree.py  # Using system-installed Python
+          python3 src/update_property_rule_tree.py 
 
   deploy-to-stage:
     needs: update-rule-tree
@@ -44,22 +44,24 @@ jobs:
         run: |
           python3 src/activate_on_stage.py  # Using system-installed Python
 
-      # Step: Run test script and handle status code ranges
-      - name: Run staging test script
-        id: run_test
-        run: |
-          python3 tests/test_stage.py
+  test-on-stage:
+    needs: deploy-to-stage  # This job will only run if 'deploy-to-stage' is successful
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
-#      - name: Check for valid status code range (2xx, 3xx, 4xx)
-#        run: |
-#          status_code=$(python3 tests/test_stage.py)
-#          echo "Status Code: $status_code"
-#          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
-#            echo "Status code is valid."
-#          else
-#            exit 1
-#          fi
+      # Step: Install dependencies (if needed)
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt 
+
+      # Step: Run pytest to test on staging environment
+      - name: Run pytest on staging environment
+        run: |
+          pytest src/tests/test_stage.py  # Run your pytest file to verify on staging
+
+
 
   merge-to-main:
     needs: deploy-to-stage
