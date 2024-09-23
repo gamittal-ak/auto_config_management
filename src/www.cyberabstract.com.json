@@ -485,7 +485,7 @@
                     "originType": "CUSTOMER",
                     "ports": "",
                     "tlsVersionTitle": "",
-                    "trueClientIpClientSetting": false,
+                    "trueClientIpClientSetting": true,
                     "trueClientIpHeader": "True-Client-IP",
                     "verificationMode": "PLATFORM_SETTINGS",
                     "hostname": "ca-origin.cyberabstract.com",
