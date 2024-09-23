@@ -431,7 +431,7 @@
                                 "options": {
                                     "matchCaseSensitive": false,
                                     "matchOperator": "IS_ONE_OF",
-                                    "matchWildcard": true,
+                                    "matchWildcard": false,
                                     "values": [
                                         "application/*javascript*",
                                         "application/*json*",

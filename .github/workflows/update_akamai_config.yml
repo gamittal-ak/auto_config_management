@@ -1,8 +1,8 @@
 name: Deploy Akamai Config
 on:
   push:
-    branches:
-      - feature/*  # Trigger when a feature branch is updated
+#    branches:
+#      - feature/*  # Trigger when a feature branch is updated
     paths:
       - src/www.cyberabstract.com.json  # Trigger only when this file is changed
 
