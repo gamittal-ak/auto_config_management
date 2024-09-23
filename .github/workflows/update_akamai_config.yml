@@ -84,6 +84,11 @@ jobs:
         with:
           ref: main
 
+      # Capture the feature branch name in an environment variable
+      - name: Capture feature branch name
+        run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+
+
       # Merge the feature branch into the main branch
       - name: Merge feature branch into main
         id: merge  # Assigning an ID to reference this step
