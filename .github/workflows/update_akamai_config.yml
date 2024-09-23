@@ -63,7 +63,7 @@ jobs:
       # Step: Run pytest to test on staging environment
       - name: Run pytest on staging environment
         run: |
-          pytest src/tests/test_stage.py  # Run your pytest file to verify on staging
+          pytest tests/test_stage.py  # Run your pytest file to verify on staging
 
 
 
@@ -108,14 +108,3 @@ jobs:
         id: run_test
         run: |
           python3 tests/test_prod.py
-
-#      # Ensure that the response code is in the 2xx, 3xx, or 4xx range
-#      - name: Check for valid status code range (2xx, 3xx, 4xx)
-#        run: |
-#          status_code=$(python3 tests/test_prod.py)
-#          echo "Status Code: $status_code"
-#          if [ $status_code -ge 200 ] && [ $status_code -lt 500 ]; then
-#            echo "Status code is valid."
-#          else
-#            exit 1
-#          fi

@@ -72,3 +72,5 @@ if __name__ == '__main__':
     etag = '5766855d8879dab1fa85ebf276c53169f38abf4a'
     response = activate_on_stage(ASK,propertyId, propertyVersion, contractId, groupId)
     print(response.status_code)
+
+    # print(response.json()[])
