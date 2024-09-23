@@ -74,8 +74,6 @@ jobs:
         working-directory: ${{ github.workspace }}
 
 
-
-
   merge-to-main:
     needs: test-on-stage
     if: success()  # This ensures that this job runs only if the previous jobs are successful
@@ -103,3 +101,21 @@ jobs:
           git remote set-url origin https://mgaurav5:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/mgaurav5/auto_deploy.git
           git push origin --delete ${{ github.head_ref }}  # Delete the feature branch on the remote
 
+  deploy-to-prod:
+    needs: merge-to-main  # Only runs if the merge is successful
+    runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Deploy to Akamai Production
+      - name: Deploy to Akamai Production
+        run: |
+          python src/deploy_prod.py  # Replace with your production deployment script
+
+      # Step: Run pytest to test on staging environment
+      - name: Run pytest on prod environment
+        run: |
+          pytest tests/test_prod.py  # Run your pytest file to verify on prod
+        working-directory: ${{ github.workspace }}
