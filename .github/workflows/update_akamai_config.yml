@@ -68,7 +68,7 @@ jobs:
 
 
   merge-to-main:
-    needs: deploy-to-stage
+    needs: test-on-stage
     if: success()  # This ensures that this job runs only if the previous jobs are successful
     runs-on: [self-hosted, demo_workflow]
     steps:
