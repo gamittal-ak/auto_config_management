@@ -54,10 +54,6 @@ def activate_on_stage(ASK, propertyId, propertyVersion, contractId, groupId):
     print(response.json())
     return response
 
-
-
-
-
 if __name__ == '__main__':
     # ASK  = generate_switch_key()
     # Akamai Tech
