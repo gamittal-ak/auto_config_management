@@ -75,7 +75,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
   deploy-to-prod:
-#    needs: test-on-stage
+    needs: update-rule-tree
     runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
     steps:
       # Step 1: Check out the code
