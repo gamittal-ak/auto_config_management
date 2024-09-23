@@ -100,12 +100,12 @@ jobs:
           git remote set-url origin https://mgaurav5:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/mgaurav5/auto_deploy.git
           git push origin main  # Push the changes to the main branch
 
-      # Delete the feature branch after merging, only if merge was successful
+    # Delete the feature branch after merging, only if merge was successful
       - name: Delete feature branch
         if: steps.merge.outcome == 'success'  # Only run this step if the merge was successful
         run: |
           git remote set-url origin https://mgaurav5:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/mgaurav5/auto_deploy.git
-          git push origin --delete ${{ github.head_ref }}  # Delete the feature branch on the remote
+          git push origin --delete ${{ env.BRANCH_NAME }}  # Delete the captured feature branch
 
   deploy-to-prod:
     needs: merge-to-main  # Only runs if the merge is successful
