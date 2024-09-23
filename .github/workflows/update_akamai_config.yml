@@ -109,6 +109,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step: Install dependencies (if needed)
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt 
+
+      - name: Print the working directory and list contents
+        run: |
+          echo "Current working directory:"
+          pwd  # Print the current working directory
+          echo "Directory contents:"
+          ls -al  # List the contents of the current directory
+
+
       # Step 2: Deploy to Akamai Production
       - name: Deploy to Akamai Production
         run: |
