@@ -8,74 +8,74 @@ on:
 #      - src/www.cyberabstract.com.json  # Trigger only when this file is changed
 
 jobs:
-  update-rule-tree:
-    runs-on: [self-hosted, demo_workflow]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Create .edgerc file
-        run: |
-          echo "${{ secrets.AKAMAI_EDGERC }}" > ~/.edgerc
-
-
-      # Step 2: Install dependencies
-      - name: Install dependencies
-        run: |
-          pip3 install -r requirements.txt  
-
-      # Create a new Property Version
-      - name: Create a new Property Version
-        run: |
-          python3 src/create_a_new_property_version.py
-
-      - name: Update Property Rule Tree
-        run: |
-          python3 src/update_property_rule_tree.py
-
-  deploy-to-stage:
-    needs: update-rule-tree
-    runs-on: [self-hosted, demo_workflow]
-    steps:
-      - name: Install dependencies
-        run: |
-          pip3 install -r requirements.txt  
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step: Deploy to Akamai Staging
-      - name: Deploy to Akamai Staging
-        run: |
-          python3 src/activate_on_stage.py  # Using system-installed Python
-
-  test-on-stage:
-    needs: deploy-to-stage  # This job will only run if 'deploy-to-stage' is successful
-    runs-on: [self-hosted, demo_workflow]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step: Install dependencies (if needed)
-      - name: Install dependencies
-        run: |
-          pip3 install -r requirements.txt 
-
-      - name: Print the working directory and list contents
-        run: |
-          echo "Current working directory:"
-          pwd  # Print the current working directory
-          echo "Directory contents:"
-          ls -al  # List the contents of the current directory
-
-      # Step: Run pytest to test on staging environment
-      - name: Run pytest on staging environment
-        run: |
-          pytest tests/test_stage.py  # Run your pytest file to verify on staging
-        working-directory: ${{ github.workspace }}
+#  update-rule-tree:
+#    runs-on: [self-hosted, demo_workflow]
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Create .edgerc file
+#        run: |
+#          echo "${{ secrets.AKAMAI_EDGERC }}" > ~/.edgerc
+#
+#
+#      # Step 2: Install dependencies
+#      - name: Install dependencies
+#        run: |
+#          pip3 install -r requirements.txt
+#
+#      # Create a new Property Version
+#      - name: Create a new Property Version
+#        run: |
+#          python3 src/create_a_new_property_version.py
+#
+#      - name: Update Property Rule Tree
+#        run: |
+#          python3 src/update_property_rule_tree.py
+#
+#  deploy-to-stage:
+#    needs: update-rule-tree
+#    runs-on: [self-hosted, demo_workflow]
+#    steps:
+#      - name: Install dependencies
+#        run: |
+#          pip3 install -r requirements.txt
+#
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      # Step: Deploy to Akamai Staging
+#      - name: Deploy to Akamai Staging
+#        run: |
+#          python3 src/activate_on_stage.py  # Using system-installed Python
+#
+#  test-on-stage:
+#    needs: deploy-to-stage  # This job will only run if 'deploy-to-stage' is successful
+#    runs-on: [self-hosted, demo_workflow]
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      # Step: Install dependencies (if needed)
+#      - name: Install dependencies
+#        run: |
+#          pip3 install -r requirements.txt
+#
+#      - name: Print the working directory and list contents
+#        run: |
+#          echo "Current working directory:"
+#          pwd  # Print the current working directory
+#          echo "Directory contents:"
+#          ls -al  # List the contents of the current directory
+#
+#      # Step: Run pytest to test on staging environment
+#      - name: Run pytest on staging environment
+#        run: |
+#          pytest tests/test_stage.py  # Run your pytest file to verify on staging
+#        working-directory: ${{ github.workspace }}
 
   deploy-to-prod:
-    needs: test-on-stage
+#    needs: test-on-stage
     runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
     steps:
       # Step 1: Check out the code
