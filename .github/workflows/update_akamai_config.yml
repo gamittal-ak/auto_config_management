@@ -79,15 +79,14 @@ jobs:
     if: success()  # This ensures that this job runs only if the previous jobs are successful
     runs-on: [self-hosted, demo_workflow]
     steps:
-      - name: Checkout main branch
-        uses: actions/checkout@v3
-        with:
-          ref: main
-
       # Capture the feature branch name in an environment variable
       - name: Capture feature branch name
         run: echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
 
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
 
       # Merge the feature branch into the main branch
       - name: Merge feature branch into main
