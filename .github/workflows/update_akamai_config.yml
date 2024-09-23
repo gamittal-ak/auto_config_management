@@ -64,7 +64,7 @@ jobs:
       - name: Run pytest on staging environment
         run: |
           pytest tests/test_stage.py  # Run your pytest file to verify on staging
-          working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}
 
 
 
