@@ -1,4 +1,3 @@
-import json
 import pickle
 from credentials import load_switch_key, session, baseurl
 from urllib.parse import urljoin

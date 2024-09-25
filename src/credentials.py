@@ -42,16 +42,29 @@ def generate_switch_key():
 
 
 def load_switch_key():
+    pkl_file_path = os.path.join('src', 'switchkey.pkl')  # Path to your .pkl file
+
     """Load the switch key from the pickle file."""
+    if not os.path.exists(pkl_file_path):
+        print(f"Pickle file {pkl_file_path} not found. Exiting.")
+        exit(1)
     try:
-        with open('switch_key.pkl', 'rb') as f:
+        # Load the switch key from the pickle file
+        with open(pkl_file_path, 'rb') as f:
             switch_key_data = pickle.load(f)
+
+        # Log and return the switch key data
         print(
             f"Reusing account switch key from file: {switch_key_data['switch_key']} for account '{switch_key_data['account_name']}'")
         return switch_key_data
-    except FileNotFoundError:
-        print("Account switch key file not found.")
+
+    except pickle.UnpicklingError:
+        print("Error: Failed to unpickle the file. The pickle file may be corrupted.")
         return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
 
 
 def get_or_generate_switch_key():
