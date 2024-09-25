@@ -2,10 +2,10 @@ name: Deploy Akamai Config
 on:
   push:
     branches:
-      - main
-#      - feature/*  # Trigger when a feature branch is updated
-#    paths:
-#      - src/www.cyberabstract.com.json  # Trigger only when this file is changed
+#      - main
+      - feature/*  # Trigger when a feature branch is updated
+    paths:
+      - src/www.cyberabstract.com.json  # Trigger only when this file is changed
 
 jobs:
   update-rule-tree:
@@ -75,7 +75,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
   deploy-to-prod:
-    needs: deploy-to-stage
+    needs: test-on-stage
     runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
     steps:
       # Step 1: Check out the code
