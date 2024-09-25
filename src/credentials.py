@@ -41,13 +41,28 @@ def generate_switch_key():
     return switch_key_data
 
 
-def load_switch_key():
-    pkl_file_path = os.path.join('src', 'switch_key.pkl')  # Path to your .pkl file
+import os
+import pickle
 
-    """Load the switch key from the pickle file."""
+
+def load_switch_key():
+    """
+    Load the switch key from the pickle file located in the 'src' folder.
+
+    Returns:
+        dict: The switch key data if successfully loaded, None otherwise.
+    """
+    # Get the current directory where this script is located
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to the pickle file located in the 'src' folder
+    pkl_file_path = os.path.join(current_dir, 'switch_key.pkl')
+
+    # Check if the file exists before trying to open it
     if not os.path.exists(pkl_file_path):
-        print(f"Pickle file {pkl_file_path} not found. Exiting.")
-        exit(1)
+        print(f"Error: Pickle file {pkl_file_path} not found.")
+        return None
+
     try:
         # Load the switch key from the pickle file
         with open(pkl_file_path, 'rb') as f:
@@ -64,7 +79,6 @@ def load_switch_key():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return None
-
 
 
 def get_or_generate_switch_key():
