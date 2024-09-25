@@ -3,7 +3,7 @@ name: Deploy Akamai Config
 on:
   push:
     branches:
-      - main  # Trigger when a feature branch is updated
+#      - main  # Trigger when a feature branch is updated
     paths:
       - src/*.json  # Trigger only when this file is changed
 
