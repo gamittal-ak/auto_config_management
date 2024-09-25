@@ -47,7 +47,7 @@ jobs:
           python3 src/activate_on_akamai.py staging  # Pass 'staging' to the common script
 
   test-on-stage:
-    needs: deploy-to-stage  # This job will only run if 'deploy-to-stage' is successful
+    needs: deploy-to-stage
     runs-on: [self-hosted, demo_workflow]
     steps:
       - name: Checkout code
@@ -79,7 +79,7 @@ jobs:
           python3 src/activate_on_akamai.py production  # Pass 'production' to the common script
 
   test-on-prod:
-    needs: deploy-to-prod  # This job will only run if 'deploy-to-prod' is successful
+    needs: deploy-to-prod
     runs-on: [self-hosted, demo_workflow]
     steps:
       - name: Checkout code
@@ -93,3 +93,17 @@ jobs:
       - name: Run tests on production environment
         run: |
           python3 src/test_response.py production  # Test production environment using the unified script
+
+  cleanup:
+    # This job will only run after all other jobs have completed
+    needs: [test-on-prod, test-on-stage, deploy-to-prod, deploy-to-stage, update-rule-tree]
+    runs-on: [self-hosted, demo_workflow]
+    if: always()  # Run this job even if previous jobs failed
+    steps:
+      - name: Checkout code (optional)
+        uses: actions/checkout@v3
+
+      # Step: Cleanup .pkl files
+      - name: Cleanup .pkl files
+        run: |
+          find . -name "*.pkl" -type f -delete
