@@ -1,11 +1,11 @@
 name: Deploy Akamai Config
+
 on:
   push:
     branches:
-#      - main
       - feature/*  # Trigger when a feature branch is updated
     paths:
-      - src/www.cyberabstract.com.json  # Trigger only when this file is changed
+      - src/*.json  # Trigger only when this file is changed
 
 jobs:
   update-rule-tree:
@@ -14,17 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create .edgerc file
+      - name: Set up .edgerc credentials
         run: |
-          echo "${{ secrets.AKAMAI_EDGERC }}" > ~/.edgerc
+          export AKAMAI_EDGERC_PATH=~/.edgerc
 
-
-      # Step 2: Install dependencies
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
 
-      # Create a new Property Version
       - name: Create a new Property Version
         run: |
           python3 src/create_a_new_property_version.py
@@ -37,17 +34,17 @@ jobs:
     needs: update-rule-tree
     runs-on: [self-hosted, demo_workflow]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       # Step: Deploy to Akamai Staging
       - name: Deploy to Akamai Staging
         run: |
-          python3 src/activate_on_stage.py  # Using system-installed Python
+          python3 src/activate_on_akamai.py staging  # Pass 'staging' to the common script
 
   test-on-stage:
     needs: deploy-to-stage  # This job will only run if 'deploy-to-stage' is successful
@@ -56,57 +53,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step: Install dependencies (if needed)
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
 
-      - name: Print the working directory and list contents
+      # Step: Run tests on staging environment
+      - name: Run tests on staging environment
         run: |
-          echo "Current working directory:"
-          pwd  # Print the current working directory
-          echo "Directory contents:"
-          ls -al  # List the contents of the current directory
-
-      # Step: Run pytest to test on staging environment
-      - name: Run pytest on staging environment
-        run: |
-          pytest tests/test_stage.py  # Run your pytest file to verify on staging
-        working-directory: ${{ github.workspace }}
+          python3 src/test_response.py staging  # Test staging environment using the unified script
 
   deploy-to-prod:
     needs: test-on-stage
-    runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
-    steps:
-      # Step 1: Check out the code
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step: Install dependencies (if needed)
-      - name: Install dependencies
-        run: |
-          pip3 install -r requirements.txt 
-
-      # Step 2: Deploy to Akamai Production
-      - name: Deploy to Akamai Production
-        run: |
-          python3 src/activate_on_prod.py  # Replace with your production deployment script
-
-
-  test-on-prod:
-    needs: deploy-to-prod  # This job will only run if 'deploy-to-stage' is successful
     runs-on: [self-hosted, demo_workflow]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step: Install dependencies (if needed)
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt 
 
-      # Step: Run pytest to test on staging environment
-      - name: Run pytest on prod environment
+      # Step: Deploy to Akamai Production
+      - name: Deploy to Akamai Production
         run: |
-          pytest tests/test_prod.py  # Run your pytest file to verify on prod
-        working-directory: ${{ github.workspace }}
+          python3 src/activate_on_akamai.py production  # Pass 'production' to the common script
+
+  test-on-prod:
+    needs: deploy-to-prod  # This job will only run if 'deploy-to-prod' is successful
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      # Step: Run tests on production environment
+      - name: Run tests on production environment
+        run: |
+          python3 src/test_response.py production  # Test production environment using the unified script

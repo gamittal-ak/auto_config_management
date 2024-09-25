@@ -1,4 +1,3 @@
-akamai~=0.1.0
 requests~=2.32.3
-edgegrid-python==1.3.1
+akamai-edgegrid-python==1.3.1
 pytest

@@ -14,3 +14,4 @@
 # Ignore Python bytecode files and __pycache__ directories
 __pycache__/
 *.py[cod]
+*.pkl
