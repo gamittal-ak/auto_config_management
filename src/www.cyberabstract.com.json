@@ -19,7 +19,7 @@
                             {
                                 "name": "dnsAsyncRefresh",
                                 "options": {
-                                    "enabled": false,
+                                    "enabled": true,
                                     "timeout": "1h"
                                 }
                             }

@@ -42,7 +42,7 @@ def generate_switch_key():
 
 
 def load_switch_key():
-    pkl_file_path = os.path.join('src', 'switchkey.pkl')  # Path to your .pkl file
+    pkl_file_path = os.path.join('src', 'switch_key.pkl')  # Path to your .pkl file
 
     """Load the switch key from the pickle file."""
     if not os.path.exists(pkl_file_path):
