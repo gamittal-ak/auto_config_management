@@ -14,10 +14,6 @@ baseurl = f'https://{EDGERC.get(SECTION, "host")}'
 session = Session()
 session.auth = EdgeGridAuth.from_edgerc(EDGERC, SECTION)
 
-# Get the appropriate temp directory based on OS
-_get_switch_key_file_path = lambda: os.path.join(tempfile.gettempdir(), 'switch_key.pkl')
-
-
 def _get_all_switch_keys(my_account):
     qparam = {'search': my_account}
     resp = session.get(urljoin(baseurl,
@@ -38,17 +34,17 @@ def generate_switch_key():
 
     # Store the switch key and account name using pickle
     switch_key_data = {'switch_key': switch_key, 'account_name': account_name}
-    with open(_get_switch_key_file_path(), 'wb') as local_cache:
+    with open('switch_key.pkl', 'wb') as local_cache:
         pickle.dump(switch_key_data, local_cache)
 
-    print(f"New switch key stored in file '{_get_switch_key_file_path()}' for account '{account_name}': {switch_key}")
+    print(f"New switch key stored in file switch_key.pkl for account '{account_name}': {switch_key}")
     return switch_key_data
 
 
 def load_switch_key():
     """Load the switch key from the pickle file."""
     try:
-        with open(_get_switch_key_file_path(), 'rb') as f:
+        with open('switch_key.pkl', 'rb') as f:
             switch_key_data = pickle.load(f)
         print(
             f"Reusing account switch key from file: {switch_key_data['switch_key']} for account '{switch_key_data['account_name']}'")
