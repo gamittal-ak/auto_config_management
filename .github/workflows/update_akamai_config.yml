@@ -75,7 +75,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
   deploy-to-prod:
-    needs: update-rule-tree
+    needs: deploy-to-stage
     runs-on: [self-hosted, demo_workflow]  # Use self-hosted runner on Linode
     steps:
       # Step 1: Check out the code
@@ -86,14 +86,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt 
-
-      - name: Print the working directory and list contents
-        run: |
-          echo "Current working directory:"
-          pwd  # Print the current working directory
-          echo "Directory contents:"
-          ls -al  # List the contents of the current directory
-
 
       # Step 2: Deploy to Akamai Production
       - name: Deploy to Akamai Production
