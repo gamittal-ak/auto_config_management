@@ -3,9 +3,7 @@ name: Deploy Akamai Config
 on:
   push:
     branches:
-      - main  # Trigger when a feature branch is updated
-#    paths:
-#      - src/*.json  # Trigger only when this file is changed
+      - main  # Trigger when the main branch is updated
 
 jobs:
   update-rule-tree:
@@ -41,10 +39,10 @@ jobs:
         run: |
           pip3 install -r requirements.txt
 
-      # Step: Deploy to Akamai Staging
+      # Step: Deploy to Akamai Staging (with built-in polling)
       - name: Deploy to Akamai Staging
         run: |
-          python3 src/activate_on_akamai.py staging  # Pass 'staging' to the common script
+          python3 src/activate_on_akamai.py staging  # This step includes polling and waits for completion
 
   test-on-stage:
     needs: deploy-to-stage
@@ -60,7 +58,7 @@ jobs:
       # Step: Run tests on staging environment
       - name: Run tests on staging environment
         run: |
-          python3 tests/test_response.py staging  # Test staging environment using the unified script
+          python3 tests/test_response.py staging  # Test staging environment
 
   deploy-to-prod:
     needs: test-on-stage
@@ -73,10 +71,10 @@ jobs:
         run: |
           pip3 install -r requirements.txt 
 
-      # Step: Deploy to Akamai Production
+      # Step: Deploy to Akamai Production (with built-in polling)
       - name: Deploy to Akamai Production
         run: |
-          python3 src/activate_on_akamai.py production  # Pass 'production' to the common script
+          python3 src/activate_on_akamai.py production  # This step includes polling and waits for completion
 
   test-on-prod:
     needs: deploy-to-prod
@@ -92,10 +90,10 @@ jobs:
       # Step: Run tests on production environment
       - name: Run tests on production environment
         run: |
-          python3 tests/test_response.py production  # Test production environment using the unified script
+          python3 tests/test_response.py production  # Test production environment
 
   cleanup:
-    # This job will only run after all other jobs have completed
+    # This job will run after all other jobs have completed
     needs: [test-on-prod, test-on-stage, deploy-to-prod, deploy-to-stage, update-rule-tree]
     runs-on: [self-hosted, demo_workflow]
     if: always()  # Run this job even if previous jobs failed
