@@ -114,27 +114,27 @@ if __name__ == '__main__':
         propertyVersion = relevant_data['propertyVersion']  # Load new property version
         print(f'version to be activated {propertyVersion}')
         # Step 3: Activate the new property version on the specified network (STAGING or PRODUCTION)
-        # response = activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, network)
-        #
-        # if response is not None:
-        #     # Step 4: Extract activation link and poll for status
-        #     activation_link = response.json()['activationLink']
-        #
-        #     print("Polling for activation status...")
-        #     while True:
-        #         status = check_activation_status(activation_link)
-        #         if status == "ACTIVE":
-        #             print(f"Activation on {network.upper()} network completed successfully!")
-        #             exit(0)  # Success, continue with next steps in GitHub Actions
-        #         elif status == "FAILED":
-        #             print(f"Activation on {network.upper()} network failed.")
-        #             exit(1)  # Failure, stop workflow
-        #         else:
-        #             print(f"Current status: {status}. Waiting to complete...")
-        #             time.sleep(60)  # Wait 60 seconds before polling again
-        # else:
-        #     print("Activation failed, skipping polling.")
-        #     exit(1)
+        response = activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, network)
+
+        if response is not None:
+            # Step 4: Extract activation link and poll for status
+            activation_link = response.json()['activationLink']
+
+            print("Polling for activation status...")
+            while True:
+                status = check_activation_status(activation_link)
+                if status == "ACTIVE":
+                    print(f"Activation on {network.upper()} network completed successfully!")
+                    exit(0)  # Success, continue with next steps in GitHub Actions
+                elif status == "FAILED":
+                    print(f"Activation on {network.upper()} network failed.")
+                    exit(1)  # Failure, stop workflow
+                else:
+                    print(f"Current status: {status}. Waiting to complete...")
+                    time.sleep(60)  # Wait 60 seconds before polling again
+        else:
+            print("Activation failed, skipping polling.")
+            exit(1)
 
     except Exception as e:
         print(f"An error occurred: {e}")

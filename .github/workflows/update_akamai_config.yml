@@ -28,80 +28,80 @@ jobs:
         run: |
           python3 src/update_property_rule_tree.py
 
-#  deploy-to-stage:
-#    needs: update-rule-tree
-#    runs-on: [self-hosted, demo_workflow]
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Install dependencies
-#        run: |
-#          pip3 install -r requirements.txt
-#
-#      # Step: Deploy to Akamai Staging (with built-in polling)
-#      - name: Deploy to Akamai Staging
-#        run: |
-#          python3 src/activate_on_akamai.py staging  # This step includes polling and waits for completion
-#
-#  test-on-stage:
-#    needs: deploy-to-stage
-#    runs-on: [self-hosted, demo_workflow]
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Install dependencies
-#        run: |
-#          pip3 install -r requirements.txt
-#
-#      # Step: Run tests on staging environment
-#      - name: Run tests on staging environment
-#        run: |
-#          python3 tests/test_response.py staging  # Test staging environment
-#
-#  deploy-to-prod:
-#    needs: test-on-stage
-#    runs-on: [self-hosted, demo_workflow]
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Install dependencies
-#        run: |
-#          pip3 install -r requirements.txt
-#
-#      # Step: Deploy to Akamai Production (with built-in polling)
-#      - name: Deploy to Akamai Production
-#        run: |
-#          python3 src/activate_on_akamai.py production  # This step includes polling and waits for completion
-#
-#  test-on-prod:
-#    needs: deploy-to-prod
-#    runs-on: [self-hosted, demo_workflow]
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Install dependencies
-#        run: |
-#          pip3 install -r requirements.txt
-#
-#      # Step: Run tests on production environment
-#      - name: Run tests on production environment
-#        run: |
-#          python3 tests/test_response.py production  # Test production environment
-#
-#  cleanup:
-#    # This job will run after all other jobs have completed
-#    needs: [test-on-prod, test-on-stage, deploy-to-prod, deploy-to-stage, update-rule-tree]
-#    runs-on: [self-hosted, demo_workflow]
-#    if: always()  # Run this job even if previous jobs failed
-#    steps:
-#      - name: Checkout code (optional)
-#        uses: actions/checkout@v3
-#
-#      # Step: Cleanup .pkl files
-#      - name: Cleanup .pkl files
-#        run: |
-#          find . -name "*.pkl" -type f -delete
+  deploy-to-stage:
+    needs: update-rule-tree
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      # Step: Deploy to Akamai Staging (with built-in polling)
+      - name: Deploy to Akamai Staging
+        run: |
+          python3 src/activate_on_akamai.py staging  # This step includes polling and waits for completion
+
+  test-on-stage:
+    needs: deploy-to-stage
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      # Step: Run tests on staging environment
+      - name: Run tests on staging environment
+        run: |
+          python3 tests/test_response.py staging  # Test staging environment
+
+  deploy-to-prod:
+    needs: test-on-stage
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt 
+
+      # Step: Deploy to Akamai Production (with built-in polling)
+      - name: Deploy to Akamai Production
+        run: |
+          python3 src/activate_on_akamai.py production  # This step includes polling and waits for completion
+
+  test-on-prod:
+    needs: deploy-to-prod
+    runs-on: [self-hosted, demo_workflow]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      # Step: Run tests on production environment
+      - name: Run tests on production environment
+        run: |
+          python3 tests/test_response.py production  # Test production environment
+
+  cleanup:
+    # This job will run after all other jobs have completed
+    needs: [test-on-prod, test-on-stage, deploy-to-prod, deploy-to-stage, update-rule-tree]
+    runs-on: [self-hosted, demo_workflow]
+    if: always()  # Run this job even if previous jobs failed
+    steps:
+      - name: Checkout code (optional)
+        uses: actions/checkout@v3
+
+      # Step: Cleanup .pkl files
+      - name: Cleanup .pkl files
+        run: |
+          find . -name "*.pkl" -type f -delete
