@@ -243,27 +243,28 @@ jobs:
 ### 8. Basic Git Commands for Workflow
 Here are some basic Git commands to get started with using GitHub for version control in this project:
 
-# Clone a repository
+`
+#### Clone a repository
 git clone https://github.com/your-repo-owner/your-repo-name.git
 
-# Check the current status of your repository
+#### Check the current status of your repository
 git status
 
-# Add new or modified files to the staging area
+#### Add new or modified files to the staging area
 git add .
 
-# Commit changes with a message
+#### Commit changes with a message
 git commit -m "Your commit message"
 
-# Push changes to the remote repository (main branch)
+#### Push changes to the remote repository (main branch)
 git push origin main
 
-# Create a new branch
+#### Create a new branch
 git checkout -b new-branch-name
 
-# Merge a branch into the main branch
+#### Merge a branch into the main branch
 git checkout main
 git merge new-branch-name
 
-# Pull the latest changes from the remote repository
+#### Pull the latest changes from the remote repository
 git pull origin main`
