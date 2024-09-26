@@ -243,7 +243,7 @@ jobs:
 ### 8. Basic Git Commands for Workflow
 Here are some basic Git commands to get started with using GitHub for version control in this project:
 
-`# Clone a repository
+# Clone a repository
 git clone https://github.com/your-repo-owner/your-repo-name.git
 
 # Check the current status of your repository
