@@ -1,10 +1,10 @@
-import json
 import pickle
 import sys
 import os
 import time
 from credentials import load_switch_key, session, baseurl
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlencode
+
 
 def get_property_pkl_file():
     """Get the file path of the property pickle file."""
@@ -22,19 +22,33 @@ def load_relevant_data_from_pkl():
     try:
         with open(pkl_file_path, 'rb') as pklfile:
             relevant_data = pickle.load(pklfile)
+        print(f"Loaded relevant data from pkl: {relevant_data}")  # Debugging information
         return relevant_data
     except pickle.UnpicklingError as e:
         raise Exception(f"Error while unpickling the file: {e}")
 
 
-def check_activation_status(activation_link):
-    """Check the status of the activation."""
-    url = urljoin(baseurl, activation_link)
-    response = session.get(url)
+def get_latest_property_version(propertyId, ASK):
+    """Fetch the latest property version from Akamai."""
+    url = urljoin(baseurl, f"/papi/v1/properties/{propertyId}/versions/latest")
+    qs = {
+        'accountSwitchKey': ASK,
+    }
+
+    headers = {
+        "accept": "application/json",
+        "PAPI-Use-Prefixes": "false",
+        "content-type": "application/json"
+    }
+
+    response = session.get(url, headers=headers, params=qs)
     if response.status_code == 200:
-        status_data = response.json()
-        return status_data['activation']['status']  # Polling the activation status
+        latest_version = response.json().get('versions').get('items')[0].get('propertyVersion')
+        print(f"Latest property version: {latest_version}")
+        return latest_version
     else:
+        print(f"Failed to fetch latest property version. Status code: {response.status_code}")
+        print(f"Response content: {response.json()}")  # Add this for debugging
         return None
 
 
@@ -79,43 +93,49 @@ def activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, ne
 
     if response.status_code == 201:
         print(f"Successfully activated property on {network.upper()} network.")
-        return response
+        activation_data = response.json()
+        activation_link = activation_data.get('activationLink')
+
+        print(f'activation_link : {activation_link}')
+
+        # Split the URL to extract activationId from the path
+        path = activation_link.split('?')[0]  # Isolate the path before query parameters
+        activation_id = path.split('/')[-1]  # Extract the activationId
+        print(f"Activation ID: {activation_id}")
+        return activation_id
     else:
         print(f"Failed to activate property on {network.upper()} network. Status code: {response.status_code}")
-        print(response.json())
+        print(f"Response content: {response.json()}")  # Add this for debugging
         return None
 
 
-def get_latest_property_version(ASK, propertyId, contractId, groupId):
-    """Fetch the latest property version from Akamai."""
-    qs = {
-        'accountSwitchKey': ASK,
+def check_activation_status(propertyId, activationId, contractId, groupId, ASK):
+    """Check the activation status using the activationId for the given network."""
+
+    query_params = {
         'contractId': contractId,
         'groupId': groupId,
+        'accountSwitchKey': ASK,
     }
-    response = session.get(urljoin(baseurl, f'/papi/v1/properties/{propertyId}/versions/latest'), params=qs)
+
+    headers = {
+        "accept": "application/json",
+        "PAPI-Use-Prefixes": "false",
+        "content-type": "application/json"
+    }
+
+    # Make the GET request to check activation status
+    response = session.get(urljoin(baseurl,
+                                   f"/papi/v1/properties/{propertyId}/activations/{activationId}"), headers=headers,
+                           params=query_params)
+
     if response.status_code == 200:
-        return response.json()['versions']['items'][0]['propertyVersion']
+        activation_data = response.json()
+        return activation_data['activations']['items'][0]['status']  # Polling the activation status
     else:
-        raise Exception(f"Failed to fetch the latest version. Status code: {response.status_code}")
-
-
-def update_property_version_in_pkl(new_version):
-    """Update the property version in the pickle file."""
-    pkl_file_path = get_property_pkl_file()
-    if os.path.exists(pkl_file_path):
-        with open(pkl_file_path, 'rb') as pklfile:
-            relevant_data = pickle.load(pklfile)
-
-        # Update the property version in the relevant data
-        relevant_data['propertyVersion'] = new_version
-
-        # Save the updated data back to the pickle file
-        with open(pkl_file_path, 'wb') as pklfile:
-            pickle.dump(relevant_data, pklfile)
-        print(f"Updated property version in pickle file to {new_version}")
-    else:
-        raise FileNotFoundError(f"Pickle file '{pkl_file_path}' not found.")
+        print(f"Error while checking activation status: {response.status_code}")
+        # print(f"Response: {response.json()}")
+        return None
 
 
 if __name__ == '__main__':
@@ -125,7 +145,7 @@ if __name__ == '__main__':
         print("Example: python3 activate_on_akamai.py production")
         exit(1)
 
-    network = sys.argv[1].lower()
+    network = sys.argv[1].lower()  # Get the environment (staging or production) from command-line arguments
 
     if network not in ['staging', 'production']:
         print(f"Invalid network: {network}. Use 'staging' or 'production'.")
@@ -138,7 +158,7 @@ if __name__ == '__main__':
             raise Exception("No switch key found. Exiting.")
         ASK = switch_key_data['switch_key']
 
-        # Step 2: Load relevant data (including new property version) from the pickle file
+        # Step 2: Load relevant data (including contractId, groupId, and propertyId) from the pickle file
         relevant_data = load_relevant_data_from_pkl()
 
         # Extract relevant fields from the pickle file
@@ -146,27 +166,26 @@ if __name__ == '__main__':
         groupId = relevant_data['groupId']
         propertyId = relevant_data['propertyId']
 
-        # Step 3: Fetch the latest property version
-        latest_version = get_latest_property_version(ASK, propertyId, contractId, groupId)
+        # Step 3: Fetch the latest property version from Akamai
+        propertyVersion = get_latest_property_version(propertyId, ASK)
+        if not propertyVersion:
+            raise Exception("Unable to fetch the latest property version. Exiting.")
 
-        # Step 4: Update the pickle file with the latest property version
-        update_property_version_in_pkl(latest_version)
+        # Step 4: Activate the new property version on the specified network (STAGING or PRODUCTION)
+        print(f"Activating version {propertyVersion} on {network.upper()} network.")  # Debugging
+        activation_id = activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, network)
 
-        # Step 5: Activate the new property version on the specified network (STAGING or PRODUCTION)
-        response = activate_on_akamai(ASK, propertyId, latest_version, contractId, groupId, network)
-
-        # Step 6: Polling for activation status
-        if response is not None:
-            activation_link = response.json()['activationLink']
+        if activation_id is not None:
+            # Step 5: Poll for activation status using activationId
             print("Polling for activation status...")
             while True:
-                status = check_activation_status(activation_link)
+                status = check_activation_status(propertyId, activation_id, contractId, groupId, ASK)
                 if status == "ACTIVE":
                     print(f"Activation on {network.upper()} network completed successfully!")
-                    exit(0)  # Success
+                    exit(0)  # Success, continue with next steps in GitHub Actions
                 elif status == "FAILED":
                     print(f"Activation on {network.upper()} network failed.")
-                    exit(1)  # Failure
+                    exit(1)  # Failure, stop workflow
                 else:
                     print(f"Current status: {status}. Waiting to complete...")
                     time.sleep(60)  # Wait 60 seconds before polling again

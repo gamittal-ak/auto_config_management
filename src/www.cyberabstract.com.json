@@ -4,8 +4,9 @@
     "groupId": "18543",
     "propertyId": "1101399",
     "propertyName": "www.cyberabstract.com",
-    "propertyVersion": 15,
-    "etag": "fae3b9f3bd14255d30fdc875123e466c9128755f",
+    "propertyVersion": 22,
+    "etag": "fa3c14ba0d1a1747a1f8855dc79fb1219857a694",
+    "comments": "These should show up now",
     "rules": {
         "name": "default",
         "children": [
