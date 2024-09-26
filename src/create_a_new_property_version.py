@@ -27,15 +27,20 @@ def load_relevant_data_from_pkl():
 
 def save_relevant_data_to_pkl(new_data):
     """Save the updated relevant data to the pickle file."""
+
+    print('inside save_relevant.....', new_data)
     try:
         existing_data = load_relevant_data_from_pkl()
+        print(f"Existing data before update: {existing_data}")
+
         # Update the existing data with the new data
         existing_data.update(new_data)
+
         # Save the updated data back to the pickle file
         with open(get_property_pkl_file(), 'wb') as pklfile:
             pickle.dump(existing_data, pklfile)
 
-        print(f"Updated relevant data saved to '{get_property_pkl_file()}'")
+        print(f"New data: {new_data} saved to {get_property_pkl_file()}")
     except Exception as e:
         print(f"Failed to save data to the pickle file: {e}")
 
