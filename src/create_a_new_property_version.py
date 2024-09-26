@@ -2,7 +2,7 @@ import os
 import pickle
 from credentials import load_switch_key, session, baseurl
 from urllib.parse import urljoin
-
+import re
 
 def get_property_pkl_file():
     """Get the file path of the property pickle file."""
@@ -65,7 +65,7 @@ def create_new_version(ASK, propertyId, propertyVersion, contractId, groupId, et
 
     if response.status_code == 201:
         # Extract the new property version from the response
-        new_property_version = response.json().get('propertyVersion')
+        new_property_version = new_property_version = int(re.search(r'versions/(\d+)', response.json()['versionLink']).group(1))
         print(f"New property version created: {new_property_version}")
         return new_property_version
     else:
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         propertyId = relevant_data['propertyId']
         propertyVersion = relevant_data['propertyVersion']
         etag = relevant_data['etag']
-        property_name = relevant_data.get('propertyName', 'Unnamed Property')  # Load property name dynamically
+        property_name = relevant_data['propertyName']  # Load property name dynamically
 
         # Print the property name being processed
         print(f"Creating a new version for property: {property_name}")
