@@ -67,6 +67,9 @@ jobs:
         run: |
           pip3 install -r requirements.txt
 
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       # Step: Run tests on staging environment
       - name: Run tests on staging environment
         run: |

@@ -5,6 +5,7 @@ import time
 from credentials import load_switch_key, session, baseurl
 from urllib.parse import urljoin
 
+
 def get_property_pkl_file():
     """Get the file path of the property pickle file."""
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,18 +22,22 @@ def load_relevant_data_from_pkl():
     try:
         with open(pkl_file_path, 'rb') as pklfile:
             relevant_data = pickle.load(pklfile)
+        print(f"Loaded relevant data from pkl: {relevant_data}")  # Add this for debugging
         return relevant_data
     except pickle.UnpicklingError as e:
         raise Exception(f"Error while unpickling the file: {e}")
 
 
 def check_activation_status(activation_link):
+    """Check the status of the property activation on Akamai."""
     url = urljoin(baseurl, activation_link)
     response = session.get(url)
+
     if response.status_code == 200:
         status_data = response.json()
         return status_data['activation']['status']  # Polling the activation status
     else:
+        print(f"Error while checking activation status: {response.status_code}. Response: {response.json()}")
         return None
 
 
@@ -77,10 +82,11 @@ def activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, ne
 
     if response.status_code == 201:
         print(f"Successfully activated property on {network.upper()} network.")
+        print(f"Activation response: {response.json()}")  # Add this for debugging
         return response
     else:
         print(f"Failed to activate property on {network.upper()} network. Status code: {response.status_code}")
-        print(response.json())
+        print(f"Response content: {response.json()}")  # Add this for debugging
         return None
 
 
@@ -112,13 +118,17 @@ if __name__ == '__main__':
         groupId = relevant_data['groupId']
         propertyId = relevant_data['propertyId']
         propertyVersion = relevant_data['propertyVersion']  # Load new property version
-        print(f'version to be activated {propertyVersion}')
+
+        if not propertyVersion:
+            raise Exception("No property version found in the pickle file. Exiting.")
+
         # Step 3: Activate the new property version on the specified network (STAGING or PRODUCTION)
+        print(f"Activating version {propertyVersion} on {network.upper()} network.")  # Debugging
         response = activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, network)
 
         if response is not None:
             # Step 4: Extract activation link and poll for status
-            activation_link = response.json()['activationLink']
+            activation_link = response.json().get('activationLink')
 
             print("Polling for activation status...")
             while True:
