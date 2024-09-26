@@ -41,6 +41,10 @@ def save_relevant_data_to_pkl(new_data):
             pickle.dump(existing_data, pklfile)
 
         print(f"New data: {new_data} saved to {get_property_pkl_file()}")
+        new_data = load_relevant_data_from_pkl()
+        print(f"New data after update: {new_data}")
+
+
     except Exception as e:
         print(f"Failed to save data to the pickle file: {e}")
 
