@@ -102,10 +102,10 @@ if __name__ == '__main__':
         contractId = relevant_data['contractId']
         groupId = relevant_data['groupId']
         propertyId = relevant_data['propertyId']
-        propertyVersion = relevant_data.get('new_property_version')  # Load new property version
+        propertyVersion = relevant_data['propertyVersion']  # Load new property version
 
-        if not propertyVersion:
-            raise Exception("No new property version found in the pickle file. Exiting.")
+        # if not propertyVersion:
+        #     raise Exception("No new property version found in the pickle file. Exiting.")
 
         # Step 3: Activate the new property version on the specified network (STAGING or PRODUCTION)
         response = activate_on_akamai(ASK, propertyId, propertyVersion, contractId, groupId, network)

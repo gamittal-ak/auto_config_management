@@ -31,7 +31,6 @@ def save_relevant_data_to_pkl(new_data):
         existing_data = load_relevant_data_from_pkl()
         # Update the existing data with the new data
         existing_data.update(new_data)
-
         # Save the updated data back to the pickle file
         with open(get_property_pkl_file(), 'wb') as pklfile:
             pickle.dump(existing_data, pklfile)
@@ -65,7 +64,7 @@ def create_new_version(ASK, propertyId, propertyVersion, contractId, groupId, et
 
     if response.status_code == 201:
         # Extract the new property version from the response
-        new_property_version = new_property_version = int(re.search(r'versions/(\d+)', response.json()['versionLink']).group(1))
+        new_property_version = int(re.search(r'versions/(\d+)', response.json()['versionLink']).group(1))
         print(f"New property version created: {new_property_version}")
         return new_property_version
     else:
