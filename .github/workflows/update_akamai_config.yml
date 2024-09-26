@@ -28,18 +28,6 @@ jobs:
         run: |
           python3 src/update_property_rule_tree.py
 
-        # Commit and Push the updated pickle file to the repository
-      - name: Commit and push updated .pkl file
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add src/property_fields.pkl  # Ensure this points to the correct location of your .pkl file
-          git commit -m "Update property_fields.pkl with the latest version"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
   deploy-to-stage:
     needs: new-version-update-ruletree
     runs-on: [self-hosted, demo_workflow]
