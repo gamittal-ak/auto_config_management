@@ -33,7 +33,7 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          git add property_fields.pkl  # Ensure this points to the correct location of your .pkl file
+          git add src/property_fields.pkl  # Ensure this points to the correct location of your .pkl file
           git commit -m "Update property_fields.pkl with the latest version"
           git push
         env:
