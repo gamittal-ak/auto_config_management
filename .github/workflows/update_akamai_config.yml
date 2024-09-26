@@ -60,7 +60,7 @@ jobs:
       # Step: Run tests on staging environment
       - name: Run tests on staging environment
         run: |
-          python3 src/test_response.py staging  # Test staging environment using the unified script
+          python3 tests/test_response.py staging  # Test staging environment using the unified script
 
   deploy-to-prod:
     needs: test-on-stage
@@ -92,7 +92,7 @@ jobs:
       # Step: Run tests on production environment
       - name: Run tests on production environment
         run: |
-          python3 src/test_response.py production  # Test production environment using the unified script
+          python3 tests/test_response.py production  # Test production environment using the unified script
 
   cleanup:
     # This job will only run after all other jobs have completed
