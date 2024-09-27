@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # Trigger when the main branch is updated
+    paths:
+      - src/www.cyberabstract.com.json
 
 jobs:
   new-version-update-ruletree:
