@@ -4,9 +4,8 @@
     "groupId": "18543",
     "propertyId": "1101399",
     "propertyName": "www.cyberabstract.com",
-    "propertyVersion": 22,
-    "etag": "fa3c14ba0d1a1747a1f8855dc79fb1219857a694",
-    "comments": "These should show up now",
+    "propertyVersion": 24,
+    "etag": "e1cdbf5dd35fedfbe122b51a4e54d354f01aea9f",
     "rules": {
         "name": "default",
         "children": [
@@ -538,5 +537,6 @@
             "detail": "HTTP/3 connection reuse lets clients re-use an open connection for any domain included in your certificate, even if these domains point to different origins. Most browsers will perform a DNS query to ensure there's an overlap in the domain's IP before reusing the connection. If you're using multiple certificates, specifically both Standard TLS and Enhanced TLS, don't include the same domain across them. If you do, an HTTP request to the domain that requires Enhanced TLS could be resolved using the less secure Standard TLS certificate, and vice-versa."
         }
     ],
-    "ruleFormat": "latest"
+    "ruleFormat": "latest",
+    "comments": "These should show up now"
 }
