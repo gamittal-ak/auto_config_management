@@ -9,7 +9,7 @@ on:
 
 jobs:
   new-version-update-ruletree:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, demo_workflow]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
