@@ -26,7 +26,7 @@
                         ],
                         "criteria": [],
                         "criteriaMustSatisfy": "all",
-                        "comments": "Super Optimize the connection between edge and origin."
+                        "comments": "Optimize the connection between edge and origin."
                     },
                     {
                         "name": "Protocol optimizations",
