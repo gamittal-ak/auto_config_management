@@ -147,7 +147,7 @@
                                     }
                                 ],
                                 "criteriaMustSatisfy": "all",
-                                "comments": "Define which resources should be prefetched or not."
+                                "comments": "Define which resources should be prefetched."
                             }
                         ],
                         "behaviors": [],

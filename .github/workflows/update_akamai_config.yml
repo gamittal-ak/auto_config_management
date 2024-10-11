@@ -18,16 +18,21 @@ jobs:
         run: |
           export AKAMAI_EDGERC_PATH=~/.edgerc
 
-      - name: Install dependencies
+      - name: Create and activate virtual environment
         run: |
-          pip3 install -r requirements.txt
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Create a new Property Version
         run: |
+          source .venv/bin/activate
           python3 src/create_a_new_property_version.py
 
       - name: Update Property Rule Tree
         run: |
+          source .venv/bin/activate
           python3 src/update_property_rule_tree.py
 
   deploy-to-stage:
@@ -37,14 +42,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Create and activate virtual environment
         run: |
-          pip3 install -r requirements.txt
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # Step: Deploy to Akamai Staging (with built-in polling)
       - name: Deploy to Akamai Staging
         run: |
-          python3 src/activate_on_akamai.py staging  # This step includes polling and waits for completion
+          source .venv/bin/activate
+          python3 src/activate_on_akamai.py staging
 
   test-on-stage:
     needs: deploy-to-stage
@@ -53,17 +61,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Create and activate virtual environment
         run: |
-          pip3 install -r requirements.txt
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step: Run tests on staging environment
       - name: Run tests on staging environment
         run: |
-          python3 tests/test_response.py staging  # Test staging environment
+          source .venv/bin/activate
+          python3 tests/test_response.py staging
 
   deploy-to-prod:
     needs: test-on-stage
@@ -72,14 +80,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Create and activate virtual environment
         run: |
-          pip3 install -r requirements.txt 
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # Step: Deploy to Akamai Production (with built-in polling)
       - name: Deploy to Akamai Production
         run: |
-          python3 src/activate_on_akamai.py production  # This step includes polling and waits for completion
+          source .venv/bin/activate
+          python3 src/activate_on_akamai.py production
 
   test-on-prod:
     needs: deploy-to-prod
@@ -88,17 +99,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Create and activate virtual environment
         run: |
-          pip3 install -r requirements.txt
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # Step: Run tests on production environment
       - name: Run tests on production environment
         run: |
-          python3 tests/test_response.py production  # Test production environment
+          source .venv/bin/activate
+          python3 tests/test_response.py production
 
   cleanup:
-    # This job will run after all other jobs have completed
     needs: [test-on-prod, test-on-stage, deploy-to-prod, deploy-to-stage, new-version-update-ruletree]
     runs-on: [self-hosted, demo_workflow]
     if: always()  # Run this job even if previous jobs failed
@@ -106,7 +119,6 @@ jobs:
       - name: Checkout code (optional)
         uses: actions/checkout@v3
 
-      # Step: Cleanup .pkl files
       - name: Cleanup .pkl files
         run: |
           find . -name "*.pkl" -type f -delete
