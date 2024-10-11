@@ -4,8 +4,8 @@
     "groupId": "18543",
     "propertyId": "1101399",
     "propertyName": "www.cyberabstract.com",
-    "propertyVersion": 24,
-    "etag": "e1cdbf5dd35fedfbe122b51a4e54d354f01aea9f",
+    "propertyVersion": 26,
+    "etag": "8e676c1f5c4f9142874e248ea24f36beceb13017",
     "rules": {
         "name": "default",
         "children": [
@@ -26,7 +26,7 @@
                         ],
                         "criteria": [],
                         "criteriaMustSatisfy": "all",
-                        "comments": "Optimize the connection between edge and origin."
+                        "comments": "Super Optimize the connection between edge and origin."
                     },
                     {
                         "name": "Protocol optimizations",
